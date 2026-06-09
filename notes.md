@@ -139,6 +139,9 @@
 - SQLite until data >1tb
 
 - card data (big json file??)
+    - save ygopro db ver and/or timestamp (https://db.ygoprodeck.com/api/v7/checkDBVer.php)
+    - update if different
+
     - id (u32 4byte), name (text 60char)
     - frametype (text 20char), race/monster type (text 15char), attribute (enum-u3 | text 6char)
     - level (u4 1nib), atk (u16 2byte), def (u16 2byte)

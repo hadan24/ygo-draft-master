@@ -1,0 +1,13 @@
+[package]
+name = "ygo-draft-backend"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8.9"
+rand = "0.10.1"
+reqwest = "0.13.4"
+rusqlite = "0.40.1"
+serde = { version = "1.0.228", features = ["derive"] }
+tokio = "1.52.3"
+tracing = "0.1.44"
