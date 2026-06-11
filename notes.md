@@ -137,10 +137,16 @@
 
 # DB
 - SQLite until data >1tb
+    - https://docs.rs/rusqlite/latest/rusqlite/
+    - https://rust-lang-nursery.github.io/rust-cookbook/database/sqlite.html
+    - https://sqldocs.org/rust-sqlite/
+- 5/22/2026
+    - [~14372] cards, [~2.6] KB per card in json (used Endymion as worst case)
+    - = [~37] MB db/json data, [~2.5] GB for imgs
 
 - card data (big json file??)
     - save ygopro db ver and/or timestamp (https://db.ygoprodeck.com/api/v7/checkDBVer.php)
-    - update if different
+    - check on startup & 1 wk??, update if different
 
     - id (u32 4byte), name (text 60char)
     - frametype (text 20char), race/monster type (text 15char), attribute (enum-u3 | text 6char)
