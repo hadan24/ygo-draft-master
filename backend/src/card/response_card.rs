@@ -81,10 +81,11 @@ pub(super) enum Race {
 }
 
 
-mod test {
+#[cfg(test)]
+mod tests {
     use super::*;
     use reqwest::blocking::Response as ReqwestResponse;
-    use crate::card::test::*;
+    use crate::card::tests::*;
 
     #[test]
     fn de_normal_monster() {
