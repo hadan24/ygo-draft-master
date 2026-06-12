@@ -27,8 +27,8 @@ pub(super) struct ResponseCard {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub(super) struct MonsterData {
-    pub(super) atk: u16,
-    pub(super) def: Option<u16>,
+    pub(super) atk: i16,
+    pub(super) def: Option<i16>,
     pub(super) level: u8,
     pub(super) attribute: Attribute,
     pub(super) pend_desc: Option<Rc<str>>,
@@ -162,6 +162,38 @@ mod test {
         assert_eq!(r, ans)
     }
 
+    #[test]
+    fn de_question_atk() {
+        let r: ReqwestResponse = http::Response::new(CALCULATOR).into();
+        let r = r.json::<YGOProResponse>()
+            .expect("Should be able to decode valid JSON copy-pasted from API response");
+        let ans = YGOProResponse { data: vec![ ResponseCard {
+            id: 51196174,
+            name: Rc::from("The Calculator"),
+            card_type: Rc::from("Effect Monster"),
+            desc: Rc::from("The ATK of this card is the combined Levels of all face-up monsters you control x 300."),
+            race: Race::Thunder,
+            card_images: Rc::from([
+                ImgLinks {
+                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/51196174.jpg"),
+                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/51196174.jpg")
+                }
+            ]),
+            monster_data: Some(MonsterData {
+                atk: -1,
+                def: Some(0),
+                level: 2,
+                attribute: Attribute::Light,
+                pend_desc: None,
+                monster_desc: None,
+                scale: None,
+                linkmarkers: None
+            })
+        }]};
+
+        assert_eq!(r, ans)
+    }
+    
     #[test]
     fn de_spell() {
         let r: ReqwestResponse = http::Response::new(MST).into();
