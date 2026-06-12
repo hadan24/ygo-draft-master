@@ -34,7 +34,7 @@ pub(super) struct MonsterData {
     pub(super) pend_desc: Option<Rc<str>>,
     pub(super) monster_desc: Option<Rc<str>>,
     pub(super) scale: Option<u8>,
-    pub(super) linkmarkers: Option<Vec<LinkMarkers>>,
+    pub(super) linkmarkers: Option<Rc<[LinkMarkers]>>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
@@ -365,11 +365,11 @@ mod test {
                 pend_desc: None,
                 monster_desc: None,
                 scale: None,
-                linkmarkers: Some(vec![
+                linkmarkers: Some(Rc::from([
                     LinkMarkers::Top,
                     LinkMarkers::BottomLeft,
                     LinkMarkers::BottomRight
-                ])
+                ]))
             })
         }]};
 
