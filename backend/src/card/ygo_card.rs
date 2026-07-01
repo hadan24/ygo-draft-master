@@ -8,7 +8,7 @@ use crate::card::{
 
 
 #[derive(Deserialize, Serialize)]
-pub struct YGOCard {
+struct YGOCard {
     id: u32,
     name: Rc<str>,
     desc: Rc<str>,
@@ -19,13 +19,13 @@ pub struct YGOCard {
 #[derive(Deserialize, Serialize)]
 enum CardType {
     Monster {
+        atk: i16,
+        def: i16,
         level: u8,
-        atk: u8,
-        def: u8,
         flavor: MonsterFlavor,
         attribute: Attribute,
         mtype: MonsterType,
-        subtype: Vec<SubType>,
+        subtypes: Rc<[SubType]>,
         pendulum: Option<Pendulum>,
     },
     Spell(SpellType),
@@ -40,7 +40,7 @@ enum MonsterFlavor {
     Fusion,
     Synchro,
     Xyz,
-    Link(Vec<LinkMarkers>)
+    Link(Rc<[LinkMarkers]>)
 }
 #[derive(Deserialize, Serialize)]
 enum MonsterType {
