@@ -6,7 +6,7 @@ fn main() {
     let client = Client::new();
     let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?";
     let resp = client.get(url)
-        .query(&[("name", "Endymion, the Mighty Master of Magic")])
+        .query(&[("name", "Majespecter Crow - Yata")])
         .send()
         .unwrap()
         .json::<card::response_card::YGOProResponse>()
