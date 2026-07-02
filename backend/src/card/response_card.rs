@@ -8,10 +8,10 @@ use crate::card::{
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOProResponse{
-    data: Rc<[ResponseCard]>
+    pub(super) data: Rc<[ResponseCard]>
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub(super) struct ResponseCard {
     pub(super) id: u32,
     pub(super) name: Rc<str>,
@@ -25,7 +25,7 @@ pub(super) struct ResponseCard {
     pub(super) monster_data: Option<MonsterData>
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub(super) struct MonsterData {
     pub(super) atk: i16,
     pub(super) def: Option<i16>,
@@ -37,7 +37,7 @@ pub(super) struct MonsterData {
     pub(super) linkmarkers: Option<Rc<[LinkMarkers]>>,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub(super) enum Race {
     Aqua,
     Beast,
@@ -82,7 +82,7 @@ pub(super) enum Race {
 
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     use crate::card::tests as card_tests;
 

@@ -4,7 +4,7 @@ use std::rc::Rc;
 mod ygo_card;
 pub mod response_card;
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 enum LinkMarkers {
     Top,
     Right,
@@ -15,7 +15,7 @@ enum LinkMarkers {
     #[serde(alias="Bottom-Right")]  BottomRight,
     #[serde(alias="Bottom-Left")]   BottomLeft
 }
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
                 // deserialize FROM uppercase, serialize TO PascalCase
 #[serde(rename_all(deserialize="UPPERCASE", serialize="PascalCase"))]
 enum Attribute {    
