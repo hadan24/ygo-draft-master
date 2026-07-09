@@ -71,17 +71,17 @@ impl YGOCard {
             else { MonsterFlavor::Effect };
 
         let (desc, pendulum) = if r.card_type.contains("Pendulum") {
-            let m = rmonster.monster_desc.ok_or_else(|| CardCreationError::MissingMonsterData {
-                missing_fields: "monster effect for pendulum monster. Check for missing scale and pendulum effect too".to_string()
-            })?;
             let p = Some(Pendulum {
-                pend_eff: rmonster.pend_desc.ok_or_else(|| CardCreationError::MissingMonsterData {
-                    missing_fields: "pendulum effect. Check for missing scale and monster effect too".to_string()
-                })?,
+                pend_eff: rmonster.pend_desc.unwrap_or(Rc::from("")),   // could be empty if majespecter
                 scale: rmonster.scale.ok_or_else(|| CardCreationError::MissingMonsterData {
                     missing_fields: "scale. Check for missing pendulum and monster effects too".to_string()
                 })?
             });
+
+            // monster desc could be empty if majespecter-like
+            // (no pend eff so YGOPro forgoes those fields, puts all in "desc" like typical monster)
+            let m = rmonster.monster_desc.unwrap_or(r.desc);
+            
             (m, p)
         }
         else { (r.desc, None) };
@@ -366,6 +366,26 @@ mod tests {
                 },
                 ctype: CardType::Trap(TrapType::Counter)
             },
+            ResponseCardName::Majespecter   => YGOCard {
+                id: 68395509,
+                name: Rc::from("Majespecter Crow - Yata"),
+                desc: Rc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
+                img: ImgLinks {
+                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
+                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
+                },
+                ctype: CardType::Monster {
+                    atk: 1000,  def: 1500,  level: 4,
+                    attribute: Attribute::Wind,
+                    mtype: MonsterType::Spellcaster,
+                    flavor: MonsterFlavor::Effect,
+                    subtypes: Rc::from([]),
+                    pendulum: Some(Pendulum {
+                        pend_eff: Rc::from(""),
+                        scale: 5
+                    })
+                }
+            },
             ResponseCardName::HanShi    => YGOCard {
                 id: 53270092,
                 name: Rc::from("Han-Shi Kyudo Spirit"),
@@ -466,6 +486,9 @@ mod tests {
 
     #[test]
     fn create_trap() { test_create_general(card_tests::ResponseCardName::Solemn); }
+
+    #[test]
+    fn create_majespecter() { test_create_general(card_tests::ResponseCardName::Majespecter); }
 
     #[test]
     fn create_pendulum() { test_create_general(card_tests::ResponseCardName::HanShi); }

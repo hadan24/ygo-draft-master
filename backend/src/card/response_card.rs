@@ -198,6 +198,29 @@ pub(super) mod tests {
                 ]),
                 monster_data: None
             }])},
+            ResponseCardName::Majespecter   => YGOProResponse { data: Rc::from([ ResponseCard {
+                id: 68395509,
+                name: Rc::from("Majespecter Crow - Yata"),
+                card_type: Rc::from("Pendulum Effect Monster"),
+                desc: Rc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
+                race: Race::Spellcaster,
+                card_images: Rc::from([
+                    ImgLinks {
+                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
+                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
+                    }
+                ]),
+                monster_data: Some(MonsterData {
+                    atk: 1000,
+                    def: Some(1500),
+                    level: 4,
+                    attribute: Attribute::Wind,
+                    pend_desc: None,
+                    monster_desc: None,
+                    scale: Some(5),
+                    linkmarkers: None
+                })
+            }])},
             ResponseCardName::HanShi    => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 53270092,
                 name: Rc::from("Han-Shi Kyudo Spirit"),
@@ -325,6 +348,9 @@ pub(super) mod tests {
 
     #[test]
     fn de_trap() { test_de_general(card_tests::ResponseCardName::Solemn); }
+
+    #[test]
+    fn de_majespecter() { test_de_general(card_tests::ResponseCardName::Majespecter); }
 
     #[test]
     fn de_pendulum() { test_de_general(card_tests::ResponseCardName::HanShi); }
