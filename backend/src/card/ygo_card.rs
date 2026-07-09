@@ -64,7 +64,7 @@ impl YGOCard {
             else if r.card_type.contains("Ritual")  { MonsterFlavor::Ritual }
             else if r.card_type.contains("Fusion")  { MonsterFlavor::Fusion }
             else if r.card_type.contains("Synchro") { MonsterFlavor::Synchro }
-            else if r.card_type.contains("XYZ")     { MonsterFlavor::Xyz }
+            else if r.card_type.contains("Xyz")     { MonsterFlavor::Xyz }
             else if r.card_type.contains("Link")    { MonsterFlavor::Link(rmonster.linkmarkers
                 .ok_or_else(|| CardCreationError::MissingMonsterData { missing_fields: "link markers".to_string() })?
             )}

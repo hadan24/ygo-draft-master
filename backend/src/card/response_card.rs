@@ -15,7 +15,7 @@ pub struct YGOProResponse{
 pub(super) struct ResponseCard {
     pub(super) id: u32,
     pub(super) name: Rc<str>,
-    #[serde(alias="type")]
+    #[serde(alias="humanReadableCardType")]
     pub(super) card_type: Rc<str>,
     pub(super) desc: Rc<str>,
     pub(super) race: Race,
@@ -173,7 +173,7 @@ pub(super) mod tests {
             ResponseCardName::Mst       => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 5318639,
                 name: Rc::from("Mystical Space Typhoon"),
-                card_type: Rc::from("Spell Card"),
+                card_type: Rc::from("Quick-Play Spell"),
                 desc: Rc::from("Target 1 Spell/Trap on the field; destroy that target."),
                 race: Race::QuickPlay,
                 card_images: Rc::from([
@@ -187,7 +187,7 @@ pub(super) mod tests {
             ResponseCardName::Solemn    => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 41420027,
                 name: Rc::from("Solemn Judgment"),
-                card_type: Rc::from("Trap Card"),
+                card_type: Rc::from("Counter Trap"),
                 desc: Rc::from("When a monster(s) would be Summoned, OR a Spell/Trap Card is activated: Pay half your LP; negate the Summon or activation, and if you do, destroy that card."),
                 race: Race::Counter,
                 card_images: Rc::from([
@@ -201,7 +201,7 @@ pub(super) mod tests {
             ResponseCardName::HanShi    => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 53270092,
                 name: Rc::from("Han-Shi Kyudo Spirit"),
-                card_type: Rc::from("Spirit Monster"),
+                card_type: Rc::from("Pendulum Spirit Effect Monster"),
                 desc: Rc::from("[ Pendulum Effect ] \nIf a monster(s) is Pendulum Summoned: Return this card to the hand.\n\n[ Monster Effect ] \nWhen this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand."),
                 race: Race::Warrior,
                 card_images: Rc::from([
@@ -247,7 +247,7 @@ pub(super) mod tests {
             ResponseCardName::Tornado   => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 6983839,
                 name: Rc::from("Tornado Dragon"),
-                card_type: Rc::from("XYZ Monster"),
+                card_type: Rc::from("Xyz Effect Monster"),
                 desc: Rc::from("2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."),
                 race: Race::Wyrm,
                 card_images: Rc::from([
@@ -270,7 +270,7 @@ pub(super) mod tests {
             ResponseCardName::DecodeTalker  => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 1861629,
                 name: Rc::from("Decode Talker"),
-                card_type: Rc::from("Link Monster"),
+                card_type: Rc::from("Link Effect Monster"),
                 desc: Rc::from("2+ Effect Monsters\r\nGains 500 ATK for each monster it points to. When your opponent activates a card or effect that targets a card(s) you control (Quick Effect): You can Tribute 1 monster this card points to; negate the activation, and if you do, destroy that card."),
                 race: Race::Cyberse,
                 card_images: Rc::from([
