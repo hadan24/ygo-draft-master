@@ -8,11 +8,19 @@ use crate::card::{
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOProResponse{
-    pub(super) data: Rc<[ResponseCard]>
+    pub data: Rc<[ResponseCard]>
+}
+
+impl std::ops::Deref for YGOProResponse {
+    type Target = Rc<[ResponseCard]>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-pub(super) struct ResponseCard {
+pub struct ResponseCard {
     pub(super) id: u32,
     pub(super) name: Rc<str>,
     #[serde(alias="humanReadableCardType")]
@@ -77,7 +85,10 @@ pub(super) enum Race {
     #[serde(alias="Quick-Play")]
     QuickPlay,
     Ritual,
-    Counter
+    Counter,
+
+    #[serde(other)]
+    Other   // for Skills & Tokens
 }
 
 

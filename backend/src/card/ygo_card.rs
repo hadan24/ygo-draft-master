@@ -20,11 +20,8 @@ struct YGOCard {
 }
 impl YGOCard {
     pub fn new_from_response(r: response_card::ResponseCard) -> Result<Self, CardCreationError> {
-        if r.card_type.contains("Skill") { 
-            Err(CardCreationError::InvalidType { given: InvalidType::Skill })
-        }
-        else if r.card_type.contains("Token") {
-            Err(CardCreationError::InvalidType { given: InvalidType::Token })
+        if r.race == response_card::Race::Other {
+            Err(CardCreationError::InvalidType)
         }
         else if r.card_type.contains("Spell") {
             Ok(YGOCard {
@@ -268,19 +265,12 @@ impl TryFrom<response_card::Race> for TrapType {
 
 #[derive(Debug)]
 enum CardCreationError {
-    InvalidType { given: InvalidType },
+    InvalidType,
     ConflictingLinkDefValues { link: Option<u8>, def: Option<i16> },
     MissingMonsterData { missing_fields: String },
     InvalidMonsterType { given: response_card::Race },
     InvalidSpellType { given: response_card::Race },
     InvalidTrapType { given: response_card::Race }
-}
-
-#[derive(Debug)]
-enum InvalidType {
-    Skill,
-    Token,
-    Other
 }
 
 
