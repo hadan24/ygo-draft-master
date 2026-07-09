@@ -81,7 +81,7 @@ impl YGOCard {
             // monster desc could be empty if majespecter-like
             // (no pend eff so YGOPro forgoes those fields, puts all in "desc" like typical monster)
             let m = rmonster.monster_desc.unwrap_or(r.desc);
-            
+
             (m, p)
         }
         else { (r.desc, None) };
@@ -366,6 +366,26 @@ mod tests {
                 },
                 ctype: CardType::Trap(TrapType::Counter)
             },
+            ResponseCardName::Igknight  => YGOCard {
+                id: 24131534,
+                name: Rc::from("Igknight Squire"),
+                desc: Rc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
+                img: ImgLinks {
+                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
+                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
+                },
+                ctype: CardType::Monster {
+                    atk: 0,     def: 2000,  level: 3,
+                    attribute: Attribute::Fire,
+                    mtype: MonsterType::Warrior,
+                    flavor: MonsterFlavor::Normal,
+                    subtypes: Rc::from([]),
+                    pendulum: Some(Pendulum {
+                        pend_eff: Rc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand."),
+                        scale: 7
+                    })
+                }
+            },
             ResponseCardName::Majespecter   => YGOCard {
                 id: 68395509,
                 name: Rc::from("Majespecter Crow - Yata"),
@@ -486,6 +506,9 @@ mod tests {
 
     #[test]
     fn create_trap() { test_create_general(card_tests::ResponseCardName::Solemn); }
+
+    #[test]
+    fn create_igknight() { test_create_general(card_tests::ResponseCardName::Igknight); }
 
     #[test]
     fn create_majespecter() { test_create_general(card_tests::ResponseCardName::Majespecter); }

@@ -198,6 +198,29 @@ pub(super) mod tests {
                 ]),
                 monster_data: None
             }])},
+            ResponseCardName::Igknight  => YGOProResponse { data: Rc::from([ ResponseCard {
+                id: 24131534,
+                name: Rc::from("Igknight Squire"),
+                card_type: Rc::from("Pendulum Normal Monster"),
+                desc: Rc::from("[ Pendulum Effect ] \nIf you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.\n\n[ Monster Effect ] \n''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
+                race: Race::Warrior,
+                card_images: Rc::from([
+                    ImgLinks {
+                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
+                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
+                    }
+                ]),
+                monster_data: Some(MonsterData {
+                    atk: 0,
+                    def: Some(2000),
+                    level: 3,
+                    attribute: Attribute::Fire,
+                    pend_desc: Some(Rc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.")),
+                    monster_desc: Some(Rc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''")),
+                    scale: Some(7),
+                    linkmarkers: None
+                })
+            }])},
             ResponseCardName::Majespecter   => YGOProResponse { data: Rc::from([ ResponseCard {
                 id: 68395509,
                 name: Rc::from("Majespecter Crow - Yata"),
@@ -348,6 +371,9 @@ pub(super) mod tests {
 
     #[test]
     fn de_trap() { test_de_general(card_tests::ResponseCardName::Solemn); }
+
+    #[test]
+    fn de_igknight() { test_de_general(card_tests::ResponseCardName::Igknight); }
 
     #[test]
     fn de_majespecter() { test_de_general(card_tests::ResponseCardName::Majespecter); }
