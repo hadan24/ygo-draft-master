@@ -26,7 +26,7 @@ pub struct ResponseCard {
     #[serde(alias="humanReadableCardType")]
     pub(super) card_type: Rc<str>,
     pub(super) desc: Rc<str>,
-    pub(super) race: Race,
+    pub race: Race,
     pub(super) card_images: Rc<[ImgLinks]>,
 
     #[serde(flatten)]
@@ -46,7 +46,7 @@ pub(super) struct MonsterData {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-pub(super) enum Race {
+pub enum Race {
     Aqua,
     Beast,
     #[serde(alias="Beast-Warrior")]
@@ -61,6 +61,7 @@ pub(super) enum Race {
     Fairy,
     Fiend,
     Fish,
+    Illusion,
     Insect,
     Machine,
     Plant,
