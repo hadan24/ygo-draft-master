@@ -19,7 +19,6 @@ fn main() {
         .filter(|c| c.race == card::response_card::Race::Other && c.id != 20726052)
         .collect();
     println!("{}", resp.len());
-    println!("{resp:?}");
 
     // to view process memory usage to get above num
     let _keep_term_open = std::io::Read::read(&mut std::io::stdin(), &mut []);
