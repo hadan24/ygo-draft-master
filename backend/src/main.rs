@@ -16,7 +16,7 @@ fn main() {
     println!("{}", resp.len());
 
     let resp: Vec<&card::response_card::ResponseCard> = resp.iter()
-        .filter(|c| c.race == card::response_card::Race::Other)
+        .filter(|c| c.race == card::response_card::Race::Other && c.id != 20726052)
         .collect();
     println!("{}", resp.len());
     println!("{resp:?}");

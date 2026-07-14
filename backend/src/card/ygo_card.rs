@@ -21,7 +21,16 @@ struct YGOCard {
 impl YGOCard {
     pub fn new_from_response(r: response_card::ResponseCard) -> Result<Self, CardCreationError> {
         if r.race == response_card::Race::Other {
-            Err(CardCreationError::InvalidType)
+            // special case for malformed Malixx GWC entry
+            // check https://github.com/AlanOC91/YGOPRODeck/issues/566
+            if r.id == 20726052 {
+                Ok(YGOCard {
+                    id: r.id,       name: r.name,
+                    desc: r.desc,   img: r.card_images[0].clone(),
+                    ctype: CardType::Trap(TrapType::Normal)
+                })
+            }
+            else { Err(CardCreationError::InvalidType) }
         }
         else if r.card_type.contains("Spell") {
             Ok(YGOCard {
@@ -348,6 +357,16 @@ mod tests {
                 },
                 ctype: CardType::Spell(SpellType::QuickPlay)
             },
+            ResponseCardName::MalissGwc => YGOCard {
+                id: 20726052,
+                name: Rc::from("Maliss <C> GWC-06"),
+                desc: Rc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
+                img: ImgLinks {
+                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
+                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
+                },
+                ctype: CardType::Trap(TrapType::Normal)
+            },
             ResponseCardName::Solemn    => YGOCard {
                 id: 41420027,
                 name: Rc::from("Solemn Judgment"),
@@ -495,6 +514,12 @@ mod tests {
     
     #[test]
     fn create_spell() { test_create_general(card_tests::ResponseCardName::Mst); }
+
+    #[test]
+    fn create_gwc() {
+        println!("Maliss <C> GWC-06 is not sent correctly in YGOProDeck API. Check https://github.com/AlanOC91/YGOPRODeck/issues/566");
+        test_create_general(card_tests::ResponseCardName::MalissGwc);
+    }
 
     #[test]
     fn create_trap() { test_create_general(card_tests::ResponseCardName::Solemn); }

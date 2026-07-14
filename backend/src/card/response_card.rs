@@ -21,7 +21,7 @@ impl std::ops::Deref for YGOProResponse {
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct ResponseCard {
-    pub(super) id: u32,
+    pub id: u32,
     pub(super) name: Rc<str>,
     #[serde(alias="humanReadableCardType")]
     pub(super) card_type: Rc<str>,
@@ -192,6 +192,20 @@ pub(super) mod tests {
                     ImgLinks {
                         small: Rc::from("https://images.ygoprodeck.com/images/cards_small/5318639.jpg"),
                         cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/5318639.jpg")
+                    }
+                ]),
+                monster_data: None
+            }])},
+            ResponseCardName::MalissGwc => YGOProResponse { data: Rc::from([ ResponseCard {
+                id: 20726052,
+                name: Rc::from("Maliss <C> GWC-06"),
+                card_type: Rc::from(" Trap"),
+                desc: Rc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
+                race: Race::Other,
+                card_images: Rc::from([
+                    ImgLinks {
+                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
+                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
                     }
                 ]),
                 monster_data: None
@@ -380,6 +394,12 @@ pub(super) mod tests {
     
     #[test]
     fn de_spell() { test_de_general(card_tests::ResponseCardName::Mst); }
+
+    #[test]
+    fn de_gwc() {
+        println!("Maliss <C> GWC-06 is not sent correctly in YGOProDeck API. Check https://github.com/AlanOC91/YGOPRODeck/issues/566");
+        test_de_general(card_tests::ResponseCardName::MalissGwc);
+    }
 
     #[test]
     fn de_trap() { test_de_general(card_tests::ResponseCardName::Solemn); }
