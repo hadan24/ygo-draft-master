@@ -1,26 +1,38 @@
 use ygo_draft_backend::card;
-use reqwest::blocking::*;
+use axum::routing::get;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("Hello, world!");
-    let client = Client::new();
-    let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php?";
-    let resp = client.get(url)
+
+    let tcp_listener = tokio::net::TcpListener::bind("127.0.0.1:8000")
+        .await.expect("Should be able to set up listener on hard-coded localhost");
+    let app = axum::Router::new()
+        .route("/", get(|| async { "Hallo :D 🦀" }))
+        .route("/lens", get(lens));
+
+    axum::serve(tcp_listener, app)
+        .await.expect("Should be able to set up basic router on localhost w/ 1 text route");
+}
+
+
+async fn lens() -> String {
+    let client = reqwest::Client::new();
+    let resp = client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?")
         .query(&[("format", "tcg")])
-        .send()
+        .send().await
         .unwrap()
-        .json::<card::response_card::YGOProResponse>()
+        .json::<card::response_card::YGOProResponse>().await
         .unwrap();
 
-    // Jul 9 2026 -> 13903 cards (including Skills), ~15.1 mb
-    println!("{}", resp.len());
-
     // filter to only "tcg Skill cards", id is Maliss special case
-    let resp: Vec<&card::response_card::ResponseCard> = resp.iter()
-        .filter(|c| c.race == card::response_card::Race::Other && c.id != 20726052)
+    let skills: Vec<card::response_card::ResponseCard> = resp.iter()
+        .filter_map(|c| {
+            if c.race == card::response_card::Race::Other && c.id != 20726052 { Some(c.clone()) }
+            else { None }
+        })
         .collect();
-    println!("{}", resp.len());
 
-    // to view process memory usage to get above num
-    let _keep_term_open = std::io::Read::read(&mut std::io::stdin(), &mut []);
+    // Jul 9 2026 -> 13903 cards (including Skills), ~15.1 mb
+    format!("{}, {}\n{:?}", resp.len(), skills.len(), axum::Json(skills))
 }
