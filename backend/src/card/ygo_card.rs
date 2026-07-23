@@ -21,7 +21,7 @@ struct YGOCard {
 impl YGOCard {
     pub fn new_from_response(r: response_card::ResponseCard) -> Result<Self, CardCreationError> {
         if r.race == response_card::Race::Other {
-            // special case for malformed Malixx GWC entry
+            // special case for malformed Maliss GWC entry
             // check https://github.com/AlanOC91/YGOPRODeck/issues/566
             if r.id == 20726052 {
                 Ok(YGOCard {
@@ -495,7 +495,7 @@ mod tests {
     }
 
     fn test_create_general(name: card_tests::ResponseCardName) {
-        let rjson = response_json(&name).data[0].clone();
+        let rjson = response_json(&name)[0].clone();
         let card = YGOCard::new_from_response(rjson)
             .expect("Should be able to create card from hard-coded valid response object");
 

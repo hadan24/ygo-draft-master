@@ -1,4 +1,4 @@
-mod card;
+use ygo_draft_backend::card;
 use reqwest::blocking::*;
 
 fn main() {
@@ -15,6 +15,7 @@ fn main() {
     // Jul 9 2026 -> 13903 cards (including Skills), ~15.1 mb
     println!("{}", resp.len());
 
+    // filter to only "tcg Skill cards", id is Maliss special case
     let resp: Vec<&card::response_card::ResponseCard> = resp.iter()
         .filter(|c| c.race == card::response_card::Race::Other && c.id != 20726052)
         .collect();

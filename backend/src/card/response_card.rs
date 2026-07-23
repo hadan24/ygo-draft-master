@@ -8,9 +8,8 @@ use crate::card::{
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOProResponse{
-    pub data: Rc<[ResponseCard]>
+    data: Rc<[ResponseCard]>
 }
-
 impl std::ops::Deref for YGOProResponse {
     type Target = Rc<[ResponseCard]>;
 
@@ -19,6 +18,7 @@ impl std::ops::Deref for YGOProResponse {
     }
 }
 
+// pub for current main() testing, pub(super) fields for ygo_card constructors to access
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct ResponseCard {
     pub id: u32,
