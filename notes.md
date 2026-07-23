@@ -1,3 +1,5 @@
+https://github.com/RicoSuter/NSwag
+
 # Frontend
 - top bar
     - home/rules
@@ -132,16 +134,19 @@
     - send json list to front for display
 
 - login/auth
+    - https://blog.0xshadow.dev/posts/backend-engineering-with-axum/axum-reset-password/
     - https://systemdesign.tech/post/how-to-securely-store-passwords-in-a-database-a-comprehensive-guide
 
 
 # DB
 - SQLite until data >1tb
-    - https://docs.rs/rusqlite/latest/rusqlite/
-    - https://rust-lang-nursery.github.io/rust-cookbook/database/sqlite.html
-    - https://sqldocs.org/rust-sqlite/
+    - https://docs.rs/sqlx/latest/sqlx/
+    - https://youtu.be/FW4oUXHly8c?si=oeaI1BZBLZcxH0ik  // lgr's "must know" db libs
+    - https://youtu.be/bQWvoMwzQN4?si=AdL0nd31yY5pU-wF
+    - https://youtu.be/TCERYbgvbq0?si=s7kpK6jvdkpM-vqF  // basic sqlx tutorials
 - 5/22/2026
     - [~14372] cards, [~2.6] KB per card in json (used Endymion as worst case)
+        - Jul 9 2026 -> [13903] cards (including Skills), [~15.1] MB
     - = [~37] MB db/json data, [~2.5] GB for imgs
 
 - card data (big json file??)
