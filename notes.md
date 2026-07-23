@@ -141,6 +141,7 @@ https://github.com/RicoSuter/NSwag
 # DB
 - SQLite until data >1tb
     - https://docs.rs/sqlx/latest/sqlx/
+    - https://www.sqlite.org/lang_keywords.html
     - https://youtu.be/FW4oUXHly8c?si=oeaI1BZBLZcxH0ik  // lgr's "must know" db libs
     - https://youtu.be/bQWvoMwzQN4?si=AdL0nd31yY5pU-wF
     - https://youtu.be/TCERYbgvbq0?si=s7kpK6jvdkpM-vqF  // basic sqlx tutorials
