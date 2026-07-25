@@ -153,6 +153,7 @@ https://github.com/RicoSuter/NSwag
 - card data (big json file??)
     - save ygopro db ver and/or timestamp (https://db.ygoprodeck.com/api/v7/checkDBVer.php)
     - check on startup & 1 wk??, update if different
+    - store in separate 1-item table
 
     - id (u32 4byte), name (text 60char)
     - frametype (text 20char), race/monster type (text 15char), attribute (enum-u3 | text 6char)

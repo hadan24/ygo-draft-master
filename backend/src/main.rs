@@ -11,8 +11,8 @@ async fn main() {
         .route("/", get(|| async { "Hallo :D 🦀" }))
         .route("/lens", get(lens));
 
-    axum::serve(tcp_listener, app)
-        .await.expect("Should be able to set up basic router on localhost w/ 1 text route");
+    axum::serve(tcp_listener, app).await
+        .expect("Should never return/error (https://docs.rs/axum/latest/axum/serve/fn.serve.html)");
 }
 
 
