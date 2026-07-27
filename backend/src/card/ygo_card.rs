@@ -502,7 +502,7 @@ mod tests {
     }
 
     fn test_create_general(name: card_tests::ResponseCardName) {
-        let rjson = response_json(&name)[0].clone();
+        let rjson = response_json(&name).data[0].clone();
         let card = YGOCard::new_from_response(rjson)
             .expect("Should be able to create card from hard-coded valid response object");
 

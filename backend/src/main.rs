@@ -23,7 +23,8 @@ async fn lens() -> String {
         .send().await
         .unwrap()
         .json::<card::response_card::YGOProResponse>().await
-        .unwrap();
+        .unwrap()
+        .data;
 
     // filter to only "tcg Skill cards", id is Maliss special case
     let skills: Vec<card::response_card::ResponseCard> = resp.iter()

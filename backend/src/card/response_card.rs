@@ -8,14 +8,7 @@ use crate::card::{
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOProResponse{
-    data: Rc<[ResponseCard]>
-}
-impl std::ops::Deref for YGOProResponse {
-    type Target = Rc<[ResponseCard]>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.data
-    }
+    pub data: Vec<ResponseCard>
 }
 
 // pub for current main() testing, pub(super) fields for ygo_card constructors to access
@@ -101,7 +94,7 @@ pub(super) mod tests {
     pub(in crate::card) fn response_json(name: &card_tests::ResponseCardName) -> YGOProResponse {
         use card_tests::ResponseCardName;
         match name {
-            ResponseCardName::SummonedSkull => YGOProResponse { data: Rc::from([ ResponseCard {
+            ResponseCardName::SummonedSkull => YGOProResponse { data: vec![ ResponseCard {
                 id: 70781052,
                 name: Rc::from("Summoned Skull"),
                 card_type: Rc::from("Normal Monster"),
@@ -135,8 +128,8 @@ pub(super) mod tests {
                     scale: None,
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::TurboTainted  => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::TurboTainted  => YGOProResponse { data: vec![ ResponseCard {
                 id: 16769305,
                 name: Rc::from("Turbo-Tainted Hot Rod GT19"),
                 card_type: Rc::from("Flip Tuner Effect Monster"),
@@ -158,8 +151,8 @@ pub(super) mod tests {
                     scale: None,
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::Calculator    => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Calculator    => YGOProResponse { data: vec![ ResponseCard {
                 id: 51196174,
                 name: Rc::from("The Calculator"),
                 card_type: Rc::from("Effect Monster"),
@@ -181,8 +174,8 @@ pub(super) mod tests {
                     scale: None,
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::Mst       => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Mst       => YGOProResponse { data: vec![ ResponseCard {
                 id: 5318639,
                 name: Rc::from("Mystical Space Typhoon"),
                 card_type: Rc::from("Quick-Play Spell"),
@@ -195,8 +188,8 @@ pub(super) mod tests {
                     }
                 ]),
                 monster_data: None
-            }])},
-            ResponseCardName::MalissGwc => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::MalissGwc => YGOProResponse { data: vec![ ResponseCard {
                 id: 20726052,
                 name: Rc::from("Maliss <C> GWC-06"),
                 card_type: Rc::from(" Trap"),
@@ -209,8 +202,8 @@ pub(super) mod tests {
                     }
                 ]),
                 monster_data: None
-            }])},
-            ResponseCardName::Solemn    => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Solemn    => YGOProResponse { data: vec![ ResponseCard {
                 id: 41420027,
                 name: Rc::from("Solemn Judgment"),
                 card_type: Rc::from("Counter Trap"),
@@ -223,8 +216,8 @@ pub(super) mod tests {
                     }
                 ]),
                 monster_data: None
-            }])},
-            ResponseCardName::Igknight  => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Igknight  => YGOProResponse { data: vec![ ResponseCard {
                 id: 24131534,
                 name: Rc::from("Igknight Squire"),
                 card_type: Rc::from("Pendulum Normal Monster"),
@@ -246,8 +239,8 @@ pub(super) mod tests {
                     scale: Some(7),
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::Majespecter   => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Majespecter   => YGOProResponse { data: vec![ ResponseCard {
                 id: 68395509,
                 name: Rc::from("Majespecter Crow - Yata"),
                 card_type: Rc::from("Pendulum Effect Monster"),
@@ -269,8 +262,8 @@ pub(super) mod tests {
                     scale: Some(5),
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::HanShi    => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::HanShi    => YGOProResponse { data: vec![ ResponseCard {
                 id: 53270092,
                 name: Rc::from("Han-Shi Kyudo Spirit"),
                 card_type: Rc::from("Pendulum Spirit Effect Monster"),
@@ -292,8 +285,8 @@ pub(super) mod tests {
                     scale: Some(9),
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::ClearWingFast => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::ClearWingFast => YGOProResponse { data: vec![ ResponseCard {
                 id: 90036274,
                 name: Rc::from("Clear Wing Fast Dragon"),
                 card_type: Rc::from("Synchro Pendulum Effect Monster"),
@@ -315,8 +308,8 @@ pub(super) mod tests {
                     scale: Some(4),
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::Tornado   => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::Tornado   => YGOProResponse { data: vec![ ResponseCard {
                 id: 6983839,
                 name: Rc::from("Tornado Dragon"),
                 card_type: Rc::from("Xyz Effect Monster"),
@@ -338,8 +331,8 @@ pub(super) mod tests {
                     scale: None,
                     linkmarkers: None
                 })
-            }])},
-            ResponseCardName::DecodeTalker  => YGOProResponse { data: Rc::from([ ResponseCard {
+            }]},
+            ResponseCardName::DecodeTalker  => YGOProResponse { data: vec![ ResponseCard {
                 id: 1861629,
                 name: Rc::from("Decode Talker"),
                 card_type: Rc::from("Link Effect Monster"),
@@ -369,7 +362,7 @@ pub(super) mod tests {
                         LinkMarkers::BottomRight
                     ]))
                 })
-            }])},
+            }]},
         }
     }
 
