@@ -1,13 +1,20 @@
 #![allow(unused)]
 
 use std::str::FromStr;
-
-use sqlx::sqlite::{
-    SqliteConnectOptions,
-    SqlitePool,
-    SqlitePoolOptions,
-    SqliteJournalMode
+use sqlx::{
+    Row, 
+    sqlite::{
+        SqliteConnectOptions,
+        SqliteJournalMode,
+        SqlitePool,
+        SqlitePoolOptions
+}};
+use thiserror::Error;
+use crate::card::{
+    response_card,
+    ygo_card
 };
+
 
 const DB_URL: &str = "sqlite:cards.db";
 pub struct Database(SqlitePool);

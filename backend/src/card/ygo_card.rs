@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use std::rc::Rc;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -12,7 +10,7 @@ use crate::card::{
 
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-struct YGOCard {
+pub struct YGOCard {
     id: u32,
     name: Rc<str>,
     desc: Rc<str>,

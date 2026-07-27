@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::rc::Rc;
 
-mod ygo_card;
+pub mod ygo_card;
 pub mod response_card;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
