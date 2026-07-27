@@ -2,6 +2,7 @@
 
 use std::rc::Rc;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use crate::card::{
     Attribute,
     LinkMarkers,
@@ -274,13 +275,19 @@ impl TryFrom<response_card::Race> for TrapType {
     }
 }
 
-#[derive(Debug)]
-enum CardCreationError {
+#[derive(Debug, Error)]
+pub enum CardCreationError {
+    #[error("given unacceptable/unusable in-game card type")]
     InvalidType,
+    #[error("given conflicting Link Rating and Defense point values: {link:?}, {def:?}")]
     ConflictingLinkDefValues { link: Option<u8>, def: Option<i16> },
+    #[error("some Monster data is missing: {missing_fields}")]
     MissingMonsterData { missing_fields: String },
+    #[error("given invalid in-game type for Monsters: {given:?}")]
     InvalidMonsterType { given: response_card::Race },
+    #[error("given invalid in-game type for Spells: {given:?}")]
     InvalidSpellType { given: response_card::Race },
+    #[error("given invalid in-game type for Traps: {given:?}")]
     InvalidTrapType { given: response_card::Race }
 }
 

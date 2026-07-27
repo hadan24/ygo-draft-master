@@ -1,4 +1,5 @@
 https://github.com/RicoSuter/NSwag
+https://docs.rs/thiserror/latest/thiserror/
 
 # Frontend
 - top bar
@@ -143,8 +144,7 @@ https://github.com/RicoSuter/NSwag
     - https://docs.rs/sqlx/latest/sqlx/
     - https://www.sqlite.org/lang_keywords.html
     - https://youtu.be/FW4oUXHly8c?si=oeaI1BZBLZcxH0ik  // lgr's "must know" db libs
-    - https://youtu.be/bQWvoMwzQN4?si=AdL0nd31yY5pU-wF
-    - https://youtu.be/TCERYbgvbq0?si=s7kpK6jvdkpM-vqF  // basic sqlx tutorials
+    - https://youtu.be/TCERYbgvbq0?si=s7kpK6jvdkpM-vqF  // basic sqlx tutorial
 - 5/22/2026
     - [~14372] cards, [~2.6] KB per card in json (used Endymion as worst case)
         - Jul 9 2026 -> [13903] cards (including Skills), [~15.1] MB
