@@ -17,7 +17,7 @@ pub struct ResponseCard {
     pub id: u32,
     pub(super) name: Rc<str>,
     #[serde(alias="humanReadableCardType")]
-    pub(super) card_type: Rc<str>,
+    pub card_type: Rc<str>,
     pub(super) desc: Rc<str>,
     pub race: Race,
     pub(super) card_images: Rc<[ImgLinks]>,
@@ -30,7 +30,9 @@ pub struct ResponseCard {
 pub(super) struct MonsterData {
     pub(super) atk: i16,
     pub(super) def: Option<i16>,
-    pub(super) level: u8,
+    // must be Option bc of YGOPro's inconsistency in Link Monster representation
+    // https://github.com/AlanOC91/YGOPRODeck/issues/568
+    pub(super) level: Option<u8>,
     pub(super) attribute: Attribute,
     pub(super) pend_desc: Option<Rc<str>>,
     pub(super) monster_desc: Option<Rc<str>>,
@@ -121,7 +123,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 2500,
                     def: Some(1200),
-                    level: 6,
+                    level: Some(6),
                     attribute: Attribute::Dark,
                     pend_desc: None,
                     monster_desc: None,
@@ -144,7 +146,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 500,
                     def: Some(1500),
-                    level: 3,
+                    level: Some(3),
                     attribute: Attribute::Fire,
                     pend_desc: None,
                     monster_desc: None,
@@ -167,7 +169,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: -1,
                     def: Some(0),
-                    level: 2,
+                    level: Some(2),
                     attribute: Attribute::Light,
                     pend_desc: None,
                     monster_desc: None,
@@ -232,7 +234,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 0,
                     def: Some(2000),
-                    level: 3,
+                    level: Some(3),
                     attribute: Attribute::Fire,
                     pend_desc: Some(Rc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.")),
                     monster_desc: Some(Rc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''")),
@@ -255,7 +257,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 1000,
                     def: Some(1500),
-                    level: 4,
+                    level: Some(4),
                     attribute: Attribute::Wind,
                     pend_desc: None,
                     monster_desc: None,
@@ -278,7 +280,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 2400,
                     def: Some(1000),
-                    level: 5,
+                    level: Some(5),
                     attribute: Attribute::Wind,
                     pend_desc: Some(Rc::from("If a monster(s) is Pendulum Summoned: Return this card to the hand.")),
                     monster_desc: Some(Rc::from("When this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand.")),
@@ -301,7 +303,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 2500,
                     def: Some(2000),
-                    level: 7,
+                    level: Some(7),
                     attribute: Attribute::Wind,
                     pend_desc: Some(Rc::from("You can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn.")),
                     monster_desc: Some(Rc::from("1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone.")),
@@ -324,7 +326,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 2100,
                     def: Some(2000),
-                    level: 4,
+                    level: Some(4),
                     attribute: Attribute::Wind,
                     pend_desc: None,
                     monster_desc: None,
@@ -351,7 +353,7 @@ pub(super) mod tests {
                 monster_data: Some(MonsterData {
                     atk: 2300,
                     def: None,
-                    level: 0,
+                    level: Some(0),
                     attribute: Attribute::Dark,
                     pend_desc: None,
                     monster_desc: None,

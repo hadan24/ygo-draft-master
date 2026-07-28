@@ -19,7 +19,8 @@ pub struct YGOCard {
 }
 impl YGOCard {
     pub fn new_from_response(r: response_card::ResponseCard) -> Result<Self, CardCreationError> {
-        if r.race == response_card::Race::Other {
+        // Tokens have a typical monster type and would slip through otherwise
+        if r.race == response_card::Race::Other || r.card_type.contains("Token") {
             // special case for malformed Maliss GWC entry
             // check https://github.com/AlanOC91/YGOPRODeck/issues/566
             if r.id == 20726052 {
@@ -56,12 +57,13 @@ impl YGOCard {
             missing_fields: "atk, def, level, attribute".to_string()
         })?;
         let def = match (&rmonster.linkmarkers, rmonster.def) {
-            (Some(l), None) => l.len() as i16,  // take unused DEF values for Link Ratings
+            // if both are provided like in Avendread Savior, prioritize the link markers
+            (Some(l), _) => l.len() as i16, // take unused DEF values for Link Ratings
             (None, Some(d)) => d,
-            (Some(l), Some(d)) => return Err(CardCreationError::ConflictingLinkDefValues {
-                link: Some(l.len() as u8),
-                def: Some(d)
-            }),
+            // (Some(l), Some(d)) => return Err(CardCreationError::ConflictingLinkDefValues {
+            // //     link: Some(l.len() as u8),
+            // //     def: Some(d)
+            // // }),
             (None, None) => return Err(CardCreationError::ConflictingLinkDefValues { link: None, def: None })
         };
 
@@ -92,7 +94,9 @@ impl YGOCard {
         else { (r.desc, None) };
 
         let ctype = CardType::Monster {
-            level: rmonster.level,  atk: rmonster.atk,  def,
+            level: rmonster.level.unwrap_or(0),
+            atk: rmonster.atk,
+            def,
             flavor,
             attribute: rmonster.attribute,
             mtype: r.race.try_into()?,
