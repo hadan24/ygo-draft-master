@@ -1,5 +1,5 @@
-use std::rc::Rc;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use crate::card::{
     Attribute,
     LinkMarkers,
@@ -15,15 +15,20 @@ pub struct YGOProResponse{
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct ResponseCard {
     pub id: u32,
-    pub(super) name: Rc<str>,
+    pub(super) name: Arc<str>,
     #[serde(alias="humanReadableCardType")]
-    pub card_type: Rc<str>,
-    pub(super) desc: Rc<str>,
+    pub card_type: Arc<str>,
+    pub(super) desc: Arc<str>,
     pub race: Race,
-    pub(super) card_images: Rc<[ImgLinks]>,
+    pub(super) card_images: Arc<[ImgLinks]>,
 
     #[serde(flatten)]
     pub(super) monster_data: Option<MonsterData>
+}
+impl ResponseCard {
+    pub fn is_invalid(&self) -> bool {
+        (self.race == Race::Other && self.id != 20726052) || self.card_type.contains("Token")
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -34,10 +39,10 @@ pub(super) struct MonsterData {
     // https://github.com/AlanOC91/YGOPRODeck/issues/568
     pub(super) level: Option<u8>,
     pub(super) attribute: Attribute,
-    pub(super) pend_desc: Option<Rc<str>>,
-    pub(super) monster_desc: Option<Rc<str>>,
+    pub(super) pend_desc: Option<Arc<str>>,
+    pub(super) monster_desc: Option<Arc<str>>,
     pub(super) scale: Option<u8>,
-    pub(super) linkmarkers: Option<Rc<[LinkMarkers]>>,
+    pub(super) linkmarkers: Option<Arc<[LinkMarkers]>>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -98,26 +103,26 @@ pub(super) mod tests {
         match name {
             ResponseCardName::SummonedSkull => YGOProResponse { data: vec![ ResponseCard {
                 id: 70781052,
-                name: Rc::from("Summoned Skull"),
-                card_type: Rc::from("Normal Monster"),
-                desc: Rc::from("A fiend with dark powers for confusing the enemy. Among the Fiend-Type monsters, this monster boasts considerable force.\n\n(This card is always treated as an \"Archfiend\" card.)"),
+                name: Arc::from("Summoned Skull"),
+                card_type: Arc::from("Normal Monster"),
+                desc: Arc::from("A fiend with dark powers for confusing the enemy. Among the Fiend-Type monsters, this monster boasts considerable force.\n\n(This card is always treated as an \"Archfiend\" card.)"),
                 race: Race::Fiend,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/70781052.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/70781052.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/70781052.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/70781052.jpg")
                     },
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/70781053.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/70781053.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/70781053.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/70781053.jpg")
                     },
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/70781054.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/70781054.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/70781054.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/70781054.jpg")
                     },
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/70781055.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/70781055.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/70781055.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/70781055.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -133,14 +138,14 @@ pub(super) mod tests {
             }]},
             ResponseCardName::TurboTainted  => YGOProResponse { data: vec![ ResponseCard {
                 id: 16769305,
-                name: Rc::from("Turbo-Tainted Hot Rod GT19"),
-                card_type: Rc::from("Flip Tuner Effect Monster"),
-                desc: Rc::from("FLIP: You can declare a Level from 1 to 9; this card becomes that Level until the end of this turn.\r\nAfter this card has been flipped face-up, during any Main Phase (Quick Effect): You can target 1 other face-up monster on either field; immediately after this effect resolves, Synchro Summon 1 monster using only this card and that target. You can only use 1 \"Turbo-Tainted Hot Rod GT19\" effect per turn, and only once that turn."),
+                name: Arc::from("Turbo-Tainted Hot Rod GT19"),
+                card_type: Arc::from("Flip Tuner Effect Monster"),
+                desc: Arc::from("FLIP: You can declare a Level from 1 to 9; this card becomes that Level until the end of this turn.\r\nAfter this card has been flipped face-up, during any Main Phase (Quick Effect): You can target 1 other face-up monster on either field; immediately after this effect resolves, Synchro Summon 1 monster using only this card and that target. You can only use 1 \"Turbo-Tainted Hot Rod GT19\" effect per turn, and only once that turn."),
                 race: Race::Machine,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/16769305.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/16769305.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/16769305.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/16769305.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -156,14 +161,14 @@ pub(super) mod tests {
             }]},
             ResponseCardName::Calculator    => YGOProResponse { data: vec![ ResponseCard {
                 id: 51196174,
-                name: Rc::from("The Calculator"),
-                card_type: Rc::from("Effect Monster"),
-                desc: Rc::from("The ATK of this card is the combined Levels of all face-up monsters you control x 300."),
+                name: Arc::from("The Calculator"),
+                card_type: Arc::from("Effect Monster"),
+                desc: Arc::from("The ATK of this card is the combined Levels of all face-up monsters you control x 300."),
                 race: Race::Thunder,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/51196174.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/51196174.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/51196174.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/51196174.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -179,56 +184,56 @@ pub(super) mod tests {
             }]},
             ResponseCardName::Mst       => YGOProResponse { data: vec![ ResponseCard {
                 id: 5318639,
-                name: Rc::from("Mystical Space Typhoon"),
-                card_type: Rc::from("Quick-Play Spell"),
-                desc: Rc::from("Target 1 Spell/Trap on the field; destroy that target."),
+                name: Arc::from("Mystical Space Typhoon"),
+                card_type: Arc::from("Quick-Play Spell"),
+                desc: Arc::from("Target 1 Spell/Trap on the field; destroy that target."),
                 race: Race::QuickPlay,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/5318639.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/5318639.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/5318639.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/5318639.jpg")
                     }
                 ]),
                 monster_data: None
             }]},
             ResponseCardName::MalissGwc => YGOProResponse { data: vec![ ResponseCard {
                 id: 20726052,
-                name: Rc::from("Maliss <C> GWC-06"),
-                card_type: Rc::from(" Trap"),
-                desc: Rc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
+                name: Arc::from("Maliss <C> GWC-06"),
+                card_type: Arc::from(" Trap"),
+                desc: Arc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
                 race: Race::Other,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
                     }
                 ]),
                 monster_data: None
             }]},
             ResponseCardName::Solemn    => YGOProResponse { data: vec![ ResponseCard {
                 id: 41420027,
-                name: Rc::from("Solemn Judgment"),
-                card_type: Rc::from("Counter Trap"),
-                desc: Rc::from("When a monster(s) would be Summoned, OR a Spell/Trap Card is activated: Pay half your LP; negate the Summon or activation, and if you do, destroy that card."),
+                name: Arc::from("Solemn Judgment"),
+                card_type: Arc::from("Counter Trap"),
+                desc: Arc::from("When a monster(s) would be Summoned, OR a Spell/Trap Card is activated: Pay half your LP; negate the Summon or activation, and if you do, destroy that card."),
                 race: Race::Counter,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/41420027.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/41420027.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/41420027.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/41420027.jpg")
                     }
                 ]),
                 monster_data: None
             }]},
             ResponseCardName::Igknight  => YGOProResponse { data: vec![ ResponseCard {
                 id: 24131534,
-                name: Rc::from("Igknight Squire"),
-                card_type: Rc::from("Pendulum Normal Monster"),
-                desc: Rc::from("[ Pendulum Effect ] \nIf you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.\n\n[ Monster Effect ] \n''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
+                name: Arc::from("Igknight Squire"),
+                card_type: Arc::from("Pendulum Normal Monster"),
+                desc: Arc::from("[ Pendulum Effect ] \nIf you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.\n\n[ Monster Effect ] \n''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
                 race: Race::Warrior,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -236,22 +241,22 @@ pub(super) mod tests {
                     def: Some(2000),
                     level: Some(3),
                     attribute: Attribute::Fire,
-                    pend_desc: Some(Rc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.")),
-                    monster_desc: Some(Rc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''")),
+                    pend_desc: Some(Arc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand.")),
+                    monster_desc: Some(Arc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''")),
                     scale: Some(7),
                     linkmarkers: None
                 })
             }]},
             ResponseCardName::Majespecter   => YGOProResponse { data: vec![ ResponseCard {
                 id: 68395509,
-                name: Rc::from("Majespecter Crow - Yata"),
-                card_type: Rc::from("Pendulum Effect Monster"),
-                desc: Rc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
+                name: Arc::from("Majespecter Crow - Yata"),
+                card_type: Arc::from("Pendulum Effect Monster"),
+                desc: Arc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
                 race: Race::Spellcaster,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -267,14 +272,14 @@ pub(super) mod tests {
             }]},
             ResponseCardName::HanShi    => YGOProResponse { data: vec![ ResponseCard {
                 id: 53270092,
-                name: Rc::from("Han-Shi Kyudo Spirit"),
-                card_type: Rc::from("Pendulum Spirit Effect Monster"),
-                desc: Rc::from("[ Pendulum Effect ] \nIf a monster(s) is Pendulum Summoned: Return this card to the hand.\n\n[ Monster Effect ] \nWhen this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand."),
+                name: Arc::from("Han-Shi Kyudo Spirit"),
+                card_type: Arc::from("Pendulum Spirit Effect Monster"),
+                desc: Arc::from("[ Pendulum Effect ] \nIf a monster(s) is Pendulum Summoned: Return this card to the hand.\n\n[ Monster Effect ] \nWhen this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand."),
                 race: Race::Warrior,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/53270092.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/53270092.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/53270092.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/53270092.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -282,22 +287,22 @@ pub(super) mod tests {
                     def: Some(1000),
                     level: Some(5),
                     attribute: Attribute::Wind,
-                    pend_desc: Some(Rc::from("If a monster(s) is Pendulum Summoned: Return this card to the hand.")),
-                    monster_desc: Some(Rc::from("When this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand.")),
+                    pend_desc: Some(Arc::from("If a monster(s) is Pendulum Summoned: Return this card to the hand.")),
+                    monster_desc: Some(Arc::from("When this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand.")),
                     scale: Some(9),
                     linkmarkers: None
                 })
             }]},
             ResponseCardName::ClearWingFast => YGOProResponse { data: vec![ ResponseCard {
                 id: 90036274,
-                name: Rc::from("Clear Wing Fast Dragon"),
-                card_type: Rc::from("Synchro Pendulum Effect Monster"),
-                desc: Rc::from("[ Pendulum Effect ] \nYou can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn.\n\n[ Monster Effect ] \n1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone."),
+                name: Arc::from("Clear Wing Fast Dragon"),
+                card_type: Arc::from("Synchro Pendulum Effect Monster"),
+                desc: Arc::from("[ Pendulum Effect ] \nYou can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn.\n\n[ Monster Effect ] \n1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone."),
                 race: Race::Dragon,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/90036274.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/90036274.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/90036274.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/90036274.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -305,22 +310,22 @@ pub(super) mod tests {
                     def: Some(2000),
                     level: Some(7),
                     attribute: Attribute::Wind,
-                    pend_desc: Some(Rc::from("You can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn.")),
-                    monster_desc: Some(Rc::from("1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone.")),
+                    pend_desc: Some(Arc::from("You can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn.")),
+                    monster_desc: Some(Arc::from("1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone.")),
                     scale: Some(4),
                     linkmarkers: None
                 })
             }]},
             ResponseCardName::Tornado   => YGOProResponse { data: vec![ ResponseCard {
                 id: 6983839,
-                name: Rc::from("Tornado Dragon"),
-                card_type: Rc::from("Xyz Effect Monster"),
-                desc: Rc::from("2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."),
+                name: Arc::from("Tornado Dragon"),
+                card_type: Arc::from("Xyz Effect Monster"),
+                desc: Arc::from("2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."),
                 race: Race::Wyrm,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/6983839.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/6983839.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/6983839.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/6983839.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -336,18 +341,18 @@ pub(super) mod tests {
             }]},
             ResponseCardName::DecodeTalker  => YGOProResponse { data: vec![ ResponseCard {
                 id: 1861629,
-                name: Rc::from("Decode Talker"),
-                card_type: Rc::from("Link Effect Monster"),
-                desc: Rc::from("2+ Effect Monsters\r\nGains 500 ATK for each monster it points to. When your opponent activates a card or effect that targets a card(s) you control (Quick Effect): You can Tribute 1 monster this card points to; negate the activation, and if you do, destroy that card."),
+                name: Arc::from("Decode Talker"),
+                card_type: Arc::from("Link Effect Monster"),
+                desc: Arc::from("2+ Effect Monsters\r\nGains 500 ATK for each monster it points to. When your opponent activates a card or effect that targets a card(s) you control (Quick Effect): You can Tribute 1 monster this card points to; negate the activation, and if you do, destroy that card."),
                 race: Race::Cyberse,
-                card_images: Rc::from([
+                card_images: Arc::from([
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/1861629.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/1861629.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/1861629.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/1861629.jpg")
                     },
                     ImgLinks {
-                        small: Rc::from("https://images.ygoprodeck.com/images/cards_small/1861630.jpg"),
-                        cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/1861630.jpg")
+                        small: Arc::from("https://images.ygoprodeck.com/images/cards_small/1861630.jpg"),
+                        cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/1861630.jpg")
                     }
                 ]),
                 monster_data: Some(MonsterData {
@@ -358,7 +363,7 @@ pub(super) mod tests {
                     pend_desc: None,
                     monster_desc: None,
                     scale: None,
-                    linkmarkers: Some(Rc::from([
+                    linkmarkers: Some(Arc::from([
                         LinkMarkers::Top,
                         LinkMarkers::BottomLeft,
                         LinkMarkers::BottomRight

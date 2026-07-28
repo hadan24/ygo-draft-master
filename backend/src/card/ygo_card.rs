@@ -1,5 +1,5 @@
-use std::rc::Rc;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use thiserror::Error;
 use crate::card::{
     Attribute,
@@ -12,8 +12,8 @@ use crate::card::{
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOCard {
     id: u32,
-    name: Rc<str>,
-    desc: Rc<str>,
+    name: Arc<str>,
+    desc: Arc<str>,
     ctype: CardType,
     img: ImgLinks
 }
@@ -79,7 +79,7 @@ impl YGOCard {
 
         let (desc, pendulum) = if r.card_type.contains("Pendulum") {
             let p = Some(Pendulum {
-                pend_eff: rmonster.pend_desc.unwrap_or(Rc::from("")),   // could be empty if majespecter
+                pend_eff: rmonster.pend_desc.unwrap_or(Arc::from("")),   // could be empty if majespecter
                 scale: rmonster.scale.ok_or_else(|| CardCreationError::MissingMonsterData {
                     missing_fields: "scale. Check for missing pendulum and monster effects too".to_string()
                 })?
@@ -121,7 +121,7 @@ enum CardType {
         attribute: Attribute,
         mtype: MonsterType,
         flavor: MonsterFlavor,
-        subtypes: Rc<[SubType]>,
+        subtypes: Arc<[SubType]>,
         pendulum: Option<Pendulum>,
     },
     Spell(SpellType),
@@ -136,7 +136,7 @@ enum MonsterFlavor {
     Fusion,
     Synchro,
     Xyz,
-    Link(Rc<[LinkMarkers]>)
+    Link(Arc<[LinkMarkers]>)
 }
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 enum MonsterType {
@@ -214,7 +214,7 @@ enum SubType {
     Union
 }
 impl SubType {
-    fn get_all_from_card_type(card_type: &str) -> Rc<[Self]> {
+    fn get_all_from_card_type(card_type: &str) -> Arc<[Self]> {
         let mut ret = Vec::with_capacity(6);
         if card_type.contains("Flip")   { ret.push(Self::Flip); }
         if card_type.contains("Tuner")  { ret.push(Self::Tuner); }
@@ -227,7 +227,7 @@ impl SubType {
 }
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 struct Pendulum {
-    pend_eff: Rc<str>,
+    pend_eff: Arc<str>,
     scale: u8
 }
 
@@ -307,196 +307,196 @@ mod tests {
         match name {
             ResponseCardName::SummonedSkull => YGOCard {
                 id: 70781052,
-                name: Rc::from("Summoned Skull"),
-                desc: Rc::from("A fiend with dark powers for confusing the enemy. Among the Fiend-Type monsters, this monster boasts considerable force.\n\n(This card is always treated as an \"Archfiend\" card.)"),
+                name: Arc::from("Summoned Skull"),
+                desc: Arc::from("A fiend with dark powers for confusing the enemy. Among the Fiend-Type monsters, this monster boasts considerable force.\n\n(This card is always treated as an \"Archfiend\" card.)"),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/70781052.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/70781052.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/70781052.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/70781052.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 2500,  def: 1200,  level: 6,
                     attribute: Attribute::Dark,
                     mtype: MonsterType::Fiend,
                     flavor: MonsterFlavor::Normal,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: None
                 }
             },
             ResponseCardName::TurboTainted  => YGOCard {
                 id: 16769305,
-                name: Rc::from("Turbo-Tainted Hot Rod GT19"),
-                desc: Rc::from("FLIP: You can declare a Level from 1 to 9; this card becomes that Level until the end of this turn.\r\nAfter this card has been flipped face-up, during any Main Phase (Quick Effect): You can target 1 other face-up monster on either field; immediately after this effect resolves, Synchro Summon 1 monster using only this card and that target. You can only use 1 \"Turbo-Tainted Hot Rod GT19\" effect per turn, and only once that turn."),
+                name: Arc::from("Turbo-Tainted Hot Rod GT19"),
+                desc: Arc::from("FLIP: You can declare a Level from 1 to 9; this card becomes that Level until the end of this turn.\r\nAfter this card has been flipped face-up, during any Main Phase (Quick Effect): You can target 1 other face-up monster on either field; immediately after this effect resolves, Synchro Summon 1 monster using only this card and that target. You can only use 1 \"Turbo-Tainted Hot Rod GT19\" effect per turn, and only once that turn."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/16769305.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/16769305.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/16769305.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/16769305.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 500,   def: 1500,  level: 3,
                     attribute: Attribute::Fire,
                     mtype: MonsterType::Machine,
                     flavor: MonsterFlavor::Effect,
-                    subtypes: Rc::from([SubType::Flip, SubType::Tuner]),
+                    subtypes: Arc::from([SubType::Flip, SubType::Tuner]),
                     pendulum: None
                 }
             },
             ResponseCardName::Calculator    => YGOCard {
                 id: 51196174,
-                name: Rc::from("The Calculator"),
-                desc: Rc::from("The ATK of this card is the combined Levels of all face-up monsters you control x 300."),
+                name: Arc::from("The Calculator"),
+                desc: Arc::from("The ATK of this card is the combined Levels of all face-up monsters you control x 300."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/51196174.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/51196174.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/51196174.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/51196174.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: -1,    def: 0,     level: 2,
                     attribute: Attribute::Light,
                     mtype: MonsterType::Thunder,
                     flavor: MonsterFlavor::Effect,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: None
                 }
             },
             ResponseCardName::Mst       => YGOCard {
                 id: 5318639,
-                name: Rc::from("Mystical Space Typhoon"),
-                desc: Rc::from("Target 1 Spell/Trap on the field; destroy that target."),
+                name: Arc::from("Mystical Space Typhoon"),
+                desc: Arc::from("Target 1 Spell/Trap on the field; destroy that target."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/5318639.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/5318639.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/5318639.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/5318639.jpg")
                 },
                 ctype: CardType::Spell(SpellType::QuickPlay)
             },
             ResponseCardName::MalissGwc => YGOCard {
                 id: 20726052,
-                name: Rc::from("Maliss <C> GWC-06"),
-                desc: Rc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
+                name: Arc::from("Maliss <C> GWC-06"),
+                desc: Arc::from("You can activate this card the turn it was Set, by banishing 1 face-up \"Maliss\" monster you control. Special Summon 1 of your \"Maliss\" monsters that is banished or in your GY, then if you control a \"Maliss\" Link Monster, you can gain LP equal to the original ATK of that Special Summoned monster. You can only activate 1 \"Maliss GWC-06\" per turn."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/20726052.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/20726052.jpg")
                 },
                 ctype: CardType::Trap(TrapType::Normal)
             },
             ResponseCardName::Solemn    => YGOCard {
                 id: 41420027,
-                name: Rc::from("Solemn Judgment"),
-                desc: Rc::from("When a monster(s) would be Summoned, OR a Spell/Trap Card is activated: Pay half your LP; negate the Summon or activation, and if you do, destroy that card."),
+                name: Arc::from("Solemn Judgment"),
+                desc: Arc::from("When a monster(s) would be Summoned, OR a Spell/Trap Card is activated: Pay half your LP; negate the Summon or activation, and if you do, destroy that card."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/41420027.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/41420027.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/41420027.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/41420027.jpg")
                 },
                 ctype: CardType::Trap(TrapType::Counter)
             },
             ResponseCardName::Igknight  => YGOCard {
                 id: 24131534,
-                name: Rc::from("Igknight Squire"),
-                desc: Rc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
+                name: Arc::from("Igknight Squire"),
+                desc: Arc::from("''The cold steel armor of this young squire cannot hide the keen, burning mind contained within.''"),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/24131534.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/24131534.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 0,     def: 2000,  level: 3,
                     attribute: Attribute::Fire,
                     mtype: MonsterType::Warrior,
                     flavor: MonsterFlavor::Normal,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: Some(Pendulum {
-                        pend_eff: Rc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand."),
+                        pend_eff: Arc::from("If you have an \"Igknight\" card in your other Pendulum Zone: You can destroy both cards in your Pendulum Zones, and if you do, add 1 FIRE Warrior-Type monster from your Deck or Graveyard to your hand."),
                         scale: 7
                     })
                 }
             },
             ResponseCardName::Majespecter   => YGOCard {
                 id: 68395509,
-                name: Rc::from("Majespecter Crow - Yata"),
-                desc: Rc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
+                name: Arc::from("Majespecter Crow - Yata"),
+                desc: Arc::from("When this card is Normal or Special Summoned: You can add 1 \"Majespecter\" Spell Card from your Deck to your hand. You can only use this effect of \"Majespecter Crow - Yata\" once per turn. Cannot be targeted or destroyed by your opponent's card effects."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/68395509.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/68395509.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 1000,  def: 1500,  level: 4,
                     attribute: Attribute::Wind,
                     mtype: MonsterType::Spellcaster,
                     flavor: MonsterFlavor::Effect,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: Some(Pendulum {
-                        pend_eff: Rc::from(""),
+                        pend_eff: Arc::from(""),
                         scale: 5
                     })
                 }
             },
             ResponseCardName::HanShi    => YGOCard {
                 id: 53270092,
-                name: Rc::from("Han-Shi Kyudo Spirit"),
-                desc: Rc::from("When this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand."),
+                name: Arc::from("Han-Shi Kyudo Spirit"),
+                desc: Arc::from("When this card is Normal Summoned: You can return all cards you control in the same column as the cards in your Pendulum Zones to the hand (including the Pendulum Zone cards themselves), then you can add 1 monster with 2400 ATK/1000 DEF from your Deck to your hand, except \"Han-Shi Kyudo Spirit\". Once per turn, during the End Phase, if this card was Normal Summoned or flipped face-up this turn: Return this card to the hand."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/53270092.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/53270092.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/53270092.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/53270092.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 2400,  def: 1000,  level: 5,
                     attribute: Attribute::Wind,
                     mtype: MonsterType::Warrior,
                     flavor: MonsterFlavor::Effect,
-                    subtypes: Rc::from([SubType::Spirit]),
+                    subtypes: Arc::from([SubType::Spirit]),
                     pendulum: Some(Pendulum {
-                        pend_eff: Rc::from("If a monster(s) is Pendulum Summoned: Return this card to the hand."),
+                        pend_eff: Arc::from("If a monster(s) is Pendulum Summoned: Return this card to the hand."),
                         scale: 9
                     })
                 }
             },
             ResponseCardName::ClearWingFast => YGOCard {
                 id: 90036274,
-                name: Rc::from("Clear Wing Fast Dragon"),
-                desc: Rc::from("1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone."),
+                name: Arc::from("Clear Wing Fast Dragon"),
+                desc: Arc::from("1 Tuner + 1+ non-Tuner WIND monsters\r\n(Quick Effect): You can target 1 face-up monster your opponent controls that was Special Summoned from the Extra Deck; until the end of this turn, change its ATK to 0, also negate that face-up monster's effects. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn. If this card in the Monster Zone is destroyed by battle or card effect: You can place this card in your Pendulum Zone."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/90036274.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/90036274.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/90036274.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/90036274.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 2500,  def: 2000,  level: 7,
                     attribute: Attribute::Wind,
                     mtype: MonsterType::Dragon,
                     flavor: MonsterFlavor::Synchro,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: Some(Pendulum {
-                        pend_eff: Rc::from("You can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn."),
+                        pend_eff: Arc::from("You can send 1 face-up \"Speedroid\" Tuner and 1 face-up non-Tuner monster you control to the GY, whose total Levels equal 7; Special Summon this card from your Pendulum Zone. You can only use this effect of \"Clear Wing Fast Dragon\" once per turn."),
                         scale: 4
                     })
                 }
             },
             ResponseCardName::Tornado   => YGOCard {
                 id: 6983839,
-                name: Rc::from("Tornado Dragon"),
-                desc: Rc::from("2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."),
+                name: Arc::from("Tornado Dragon"),
+                desc: Arc::from("2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/6983839.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/6983839.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/6983839.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/6983839.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 2100,  def: 2000,  level: 4,
                     attribute: Attribute::Wind,
                     mtype: MonsterType::Wyrm,
                     flavor: MonsterFlavor::Xyz,
-                    subtypes: Rc::from([]),
+                    subtypes: Arc::from([]),
                     pendulum: None
                 }
             },
             ResponseCardName::DecodeTalker  => YGOCard {
                 id: 1861629,
-                name: Rc::from("Decode Talker"),
-                desc: Rc::from("2+ Effect Monsters\r\nGains 500 ATK for each monster it points to. When your opponent activates a card or effect that targets a card(s) you control (Quick Effect): You can Tribute 1 monster this card points to; negate the activation, and if you do, destroy that card."),
+                name: Arc::from("Decode Talker"),
+                desc: Arc::from("2+ Effect Monsters\r\nGains 500 ATK for each monster it points to. When your opponent activates a card or effect that targets a card(s) you control (Quick Effect): You can Tribute 1 monster this card points to; negate the activation, and if you do, destroy that card."),
                 img: ImgLinks {
-                    small: Rc::from("https://images.ygoprodeck.com/images/cards_small/1861629.jpg"),
-                    cropped: Rc::from("https://images.ygoprodeck.com/images/cards_cropped/1861629.jpg")
+                    small: Arc::from("https://images.ygoprodeck.com/images/cards_small/1861629.jpg"),
+                    cropped: Arc::from("https://images.ygoprodeck.com/images/cards_cropped/1861629.jpg")
                 },
                 ctype: CardType::Monster {
                     atk: 2300,  def: 3,     level: 0,
                     attribute: Attribute::Dark,
                     mtype: MonsterType::Cyberse,
-                    flavor: MonsterFlavor::Link(Rc::from([LinkMarkers::Top, LinkMarkers::BottomLeft, LinkMarkers::BottomRight])),
-                    subtypes: Rc::from([]),
+                    flavor: MonsterFlavor::Link(Arc::from([LinkMarkers::Top, LinkMarkers::BottomLeft, LinkMarkers::BottomRight])),
+                    subtypes: Arc::from([]),
                     pendulum: None
                 }
             },

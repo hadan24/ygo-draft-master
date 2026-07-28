@@ -28,9 +28,8 @@ async fn time_db() -> String {
         .data
         .into_iter()
         .filter_map(|rcard| {
-            if (rcard.race == card::response_card::Race::Other && rcard.id != 20726052) || rcard.card_type.contains("Token") {
-                return None;
-            }
+            if rcard.is_invalid() { return None; }
+            
             let id = rcard.id;
             match card::ygo_card::YGOCard::new_from_response(rcard) {
                 Ok(card) => Some(Ok(card)),

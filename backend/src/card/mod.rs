@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::rc::Rc;
+use std::sync::Arc;
 
 pub mod ygo_card;
 pub mod response_card;
@@ -32,9 +32,9 @@ enum Attribute {
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 struct ImgLinks {
     #[serde(alias="image_url_small")]
-    small: Rc<str>,
+    small: Arc<str>,
     #[serde(alias="image_url_cropped")]
-    cropped: Rc<str>
+    cropped: Arc<str>
 }
 
 
