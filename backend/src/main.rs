@@ -9,31 +9,36 @@ async fn main() {
         .await.expect("Should be able to set up listener on hard-coded localhost");
     let app = axum::Router::new()
         .route("/", get(|| async { "Hallo :D 🦀" }))
-        .route("/lens", get(lens));
+        .route("/time_db", get(time_db));
 
     axum::serve(tcp_listener, app).await
         .expect("Should never return/error (https://docs.rs/axum/latest/axum/serve/fn.serve.html)");
 }
 
 
-async fn lens() -> String {
+async fn time_db() -> String {
     let client = reqwest::Client::new();
-    let resp = client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?")
+    let start = std::time::Instant::now();
+    let ygopro_cards = client.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?")
         .query(&[("format", "tcg")])
-        .send().await
-        .unwrap()
-        .json::<card::response_card::YGOProResponse>().await
-        .unwrap()
-        .data;
-
-    // filter to only "tcg Skill cards", id is Maliss special case
-    let skills: Vec<card::response_card::ResponseCard> = resp.iter()
-        .filter_map(|c| {
-            if c.race == card::response_card::Race::Other && c.id != 20726052 { Some(c.clone()) }
-            else { None }
+        .send()
+        .await.unwrap()
+        .json::<card::response_card::YGOProResponse>()
+        .await.unwrap()
+        .data
+        .into_iter()
+        .filter_map(|rcard| {
+            if (rcard.race == card::response_card::Race::Other || rcard.card_type.contains("Token")) && rcard.id != 20726052 {
+                return None;
+            }
+            let id = rcard.id;
+            match card::ygo_card::YGOCard::new_from_response(rcard) {
+                Ok(card) => Some(Ok(card)),
+                Err(e) => Some(Err(format!("failed to create from {id}: {e}")))
+            }
         })
-        .collect();
-
-    // Jul 9 2026 -> 13903 cards (including Skills), ~15.1 mb
-    format!("{}, {}\n{:?}", resp.len(), skills.len(), axum::Json(skills))
+        .collect::< Result<Vec<card::ygo_card::YGOCard>, String> >()
+        .unwrap();
+    let elapsed = start.elapsed();
+    format!("Took : {elapsed:?} to convert {} cards", ygopro_cards.len())
 }
