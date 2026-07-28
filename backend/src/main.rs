@@ -28,7 +28,7 @@ async fn time_db() -> String {
         .data
         .into_iter()
         .filter_map(|rcard| {
-            if (rcard.race == card::response_card::Race::Other || rcard.card_type.contains("Token")) && rcard.id != 20726052 {
+            if (rcard.race == card::response_card::Race::Other && rcard.id != 20726052) || rcard.card_type.contains("Token") {
                 return None;
             }
             let id = rcard.id;

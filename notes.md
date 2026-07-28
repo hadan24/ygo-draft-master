@@ -148,6 +148,7 @@ https://docs.rs/thiserror/latest/thiserror/
 - 5/22/2026
     - [~14372] cards, [~2.6] KB per card in json (used Endymion as worst case)
         - Jul 9 2026 -> [13903] cards (including Skills), [~15.1] MB
+        - Jul 27 2026 -> [13911] cards total, [13777] w/o Skills or Tokens
     - = [~37] MB db/json data, [~2.5] GB for imgs
 
 - card data (big json file??)
