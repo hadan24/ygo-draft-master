@@ -145,10 +145,12 @@ https://docs.rs/thiserror/latest/thiserror/
     - https://www.sqlite.org/lang_keywords.html
     - https://youtu.be/FW4oUXHly8c?si=oeaI1BZBLZcxH0ik  // lgr's "must know" db libs
     - https://youtu.be/TCERYbgvbq0?si=s7kpK6jvdkpM-vqF  // basic sqlx tutorial
+    - https://tablesviewer.com/sqlite-viewer/
 - 5/22/2026
     - [~14372] cards, [~2.6] KB per card in json (used Endymion as worst case)
         - Jul 9 2026 -> [13903] cards (including Skills), [~15.1] MB
         - Jul 27 2026 -> [13911] cards total, [13777] w/o Skills or Tokens
+        - Aug 2 2026 -> [13930] cards total, [13796] w/o Skills or Tokens
     - = [~37] MB db/json data, [~2.5] GB for imgs
 
 - card data (big json file??)

@@ -5,6 +5,7 @@ use std::str::FromStr;
 use sqlx::{
     Row, 
     sqlite::{
+        Sqlite,
         SqliteConnectOptions,
         SqliteJournalMode,
         SqlitePool,
@@ -43,7 +44,7 @@ impl Database {
         // check docs for defaults, un- or re-comment as needed
         // https://docs.rs/sqlx/latest/sqlx/sqlite/struct.SqliteConnectOptions.html
         let opts = SqliteConnectOptions::from_str(DB_URL)
-            .expect("Check the DB url")
+            .unwrap_or_else(|_| panic!("Check the DB url: {DB_URL}"))
             //.foreign_keys(true)
             .journal_mode(SqliteJournalMode::Wal)
             .create_if_missing(true)
