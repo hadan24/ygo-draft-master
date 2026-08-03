@@ -140,7 +140,10 @@ pub enum MonsterFlavor {
 }
 impl std::fmt::Display for MonsterFlavor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self:?}")
+        match self {
+            Self::Link(..) => write!(f, "Link"),
+            _ => write!(f, "{self:?}")
+        }
     }
 }
 

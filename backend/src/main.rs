@@ -1,18 +1,24 @@
 use ygo_draft_backend::card;
+use ygo_draft_backend::db;
 use axum::routing::get;
 
 #[tokio::main]
 async fn main() {
     println!("Hello, world!");
+    let mut db = db::Database::new().await.unwrap();
+    let start = std::time::Instant::now();
+    db.update_cards_db().await.unwrap();
+    let elapsed = start.elapsed();
+    println!("Took : {elapsed:?} time");
 
-    let tcp_listener = tokio::net::TcpListener::bind("127.0.0.1:8000")
-        .await.expect("Should be able to set up listener on hard-coded localhost");
-    let app = axum::Router::new()
-        .route("/", get(|| async { "Hallo :D 🦀" }))
-        .route("/time_db", get(time_db));
+    // let tcp_listener = tokio::net::TcpListener::bind("127.0.0.1:8000")
+    //     .await.expect("Should be able to set up listener on hard-coded localhost");
+    // let app = axum::Router::new()
+    //     .route("/", get(|| async { "Hallo :D 🦀" }))
+    //     .route("/time_db", get(time_db));
 
-    axum::serve(tcp_listener, app).await
-        .expect("Should never return/error (https://docs.rs/axum/latest/axum/serve/fn.serve.html)");
+    // axum::serve(tcp_listener, app).await
+    //     .expect("Should never return/error (https://docs.rs/axum/latest/axum/serve/fn.serve.html)");
 }
 
 

@@ -1,2 +1,2 @@
 pub mod card;
-mod db;
+pub mod db;
