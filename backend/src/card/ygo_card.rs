@@ -11,11 +11,11 @@ use crate::card::{
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct YGOCard {
-    id: u32,
-    name: Arc<str>,
-    desc: Arc<str>,
-    ctype: CardType,
-    img: ImgLinks
+    pub id: u32,
+    pub name: Arc<str>,
+    pub desc: Arc<str>,
+    pub ctype: CardType,
+    pub img: ImgLinks
 }
 impl YGOCard {
     pub fn new_from_response(r: response_card::ResponseCard) -> Result<Self, CardCreationError> {
@@ -113,7 +113,7 @@ impl YGOCard {
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum CardType {
+pub enum CardType {
     Monster {
         atk: i16,
         def: i16,
@@ -129,7 +129,7 @@ enum CardType {
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum MonsterFlavor {
+pub enum MonsterFlavor {
     Normal,
     Effect,
     Ritual,
@@ -138,8 +138,14 @@ enum MonsterFlavor {
     Xyz,
     Link(Arc<[LinkMarkers]>)
 }
+impl std::fmt::Display for MonsterFlavor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum MonsterType {
+pub enum MonsterType {
     Aqua,
     Beast,
     BeastWarrior,
@@ -203,9 +209,14 @@ impl TryFrom<response_card::Race> for MonsterType {
         }
     }
 }
+impl std::fmt::Display for MonsterType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum SubType {
+pub enum SubType {
     Flip,
     Tuner,
     Gemini,
@@ -225,14 +236,15 @@ impl SubType {
         ret.into()
     }
 }
+
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-struct Pendulum {
-    pend_eff: Arc<str>,
-    scale: u8
+pub struct Pendulum {
+    pub pend_eff: Arc<str>,
+    pub scale: u8
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum SpellType {
+pub enum SpellType {
     Normal,
     Equip,
     Field,
@@ -256,9 +268,14 @@ impl TryFrom<response_card::Race> for SpellType {
         }
     }
 }
+impl std::fmt::Display for SpellType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-enum TrapType {
+pub enum TrapType {
     Normal,
     Continuous,
     Counter
@@ -274,6 +291,11 @@ impl TryFrom<response_card::Race> for TrapType {
             Race::Counter => Ok(TrapType::Counter),
             _ => Err(CardCreationError::InvalidTrapType { given: value })
         }
+    }
+}
+impl std::fmt::Display for TrapType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
     }
 }
 

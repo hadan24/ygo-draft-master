@@ -5,7 +5,7 @@ pub mod ygo_card;
 pub mod response_card;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-enum LinkMarkers {
+pub enum LinkMarkers {
     Top,
     Right,
     Bottom,
@@ -15,10 +15,17 @@ enum LinkMarkers {
     #[serde(alias="Bottom-Right")]  BottomRight,
     #[serde(alias="Bottom-Left")]   BottomLeft
 }
+impl std::fmt::Display for LinkMarkers {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
+
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
                 // deserialize FROM uppercase, serialize TO PascalCase
 #[serde(rename_all(deserialize="UPPERCASE", serialize="PascalCase"))]
-enum Attribute {    
+pub enum Attribute {    
     Fire,
     Water,
     Earth,
@@ -27,10 +34,15 @@ enum Attribute {
     Light,
     Divine
 }
+impl std::fmt::Display for Attribute {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
 
 // change to path
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-struct ImgLinks {
+pub struct ImgLinks {
     #[serde(alias="image_url_small")]
     small: Arc<str>,
     #[serde(alias="image_url_cropped")]
